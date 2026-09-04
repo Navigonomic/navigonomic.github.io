@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigonomic</title>
+  <style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: #15202b;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.white-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #ffffff;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 5s ease;
+    z-index: 9999;
+}
+
+.white-overlay.active {
+    opacity: 1;
+}
+
+.setup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(21, 32, 43, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.setup-card {
+    background-color: #192734;
+    border: 1px solid #38444d;
+    padding: 30px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+}
+
+.brand-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.brand-logo {
+    width: 40px;
+    height: 40px;
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: none;
+}
+
+.setup-card h1 {
+    font-size: 2rem;
+    color: #1da1f2;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 0.85rem;
+    color: #8899a6;
+    margin-bottom: 20px;
+}
+
+.instruction {
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+#webcam-preview {
+    width: 100%;
+    height: auto;
+    max-height: 220px;
+    background-color: #000;
+    border-radius: 8px;
+    object-fit: contain; /* Prevents auto-cropping/stretching to 16:9 */
+    margin-bottom: 15px;
+    transform: scaleX(-1);
+}
+
+.error-msg {
+    color: #e0245e;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    display: none;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #8899a6;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    background-color: #22303c;
+    border: 1px solid #38444d;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #1da1f2;
+}
+
+.btn {
+    background-color: #1da1f2;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: #1a91da;
+}
+
+.app-hidden {
+    display: none !important;
+}
+
+#app-container {
+    width: 100%;
+    max-width: 600px;
+    border-left: 1px solid #38444d;
+    border-right: 1px solid #38444d;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #38444d;
+    background-color: rgba(21, 32, 43, 0.85);
+    backdrop-filter: blur(5px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand-title {
+    font-size: 1.2rem;
+    color: #1da1f2;
+    margin: 0;
+}
+
+.brand-sub {
+    font-size: 0.75rem;
+    color: #8899a6;
+}
+
+.user-display {
+    font-size: 0.85rem;
+    color: #8899a6;
+}
+
+#current-user-handle {
+    color: #fff;
+    font-weight: bold;
+}
+
+.feed-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.post {
+    padding: 15px 20px;
+    border-bottom: 1px solid #38444d;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.post-handle {
+    font-weight: bold;
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+.post-content {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: #e1e8ed;
+}
+
+.post-snapshot {
+    margin-top: 10px;
+    width: 100%;
+    height: auto;
+    max-height: 350px;
+    border-radius: 8px;
+    object-fit: contain; /* Ensures feed snapshot maintains its native camera resolution aspect ratio */
+    border: 1px solid #38444d;
+    transform: scaleX(-1);
+    background-color: #000;
+}
+
+#hidden-webcam {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 1px;
+    height: 1px;
+}
+  </style>
+</head>
+<body>
+<div id="setup-overlay" class="setup-overlay">
+    <div class="setup-card">
+        <div class="brand-container">
+            <img src="logo.png" alt="Navigonomic Logo" class="brand-logo">
+            <h1>Navigonomic</h1>
+        </div>
+        <p class="subtitle">The social media that uses AI</p>
+        <p class="instruction">Before we start, you need to give your webcam. It is required to verify your identity.</p>
+        <video id="webcam-preview" autoplay playsinline muted></video>
+        <div id="error-message" class="error-msg">Webcam access is strictly required to proceed.</div>
+        <div class="input-group">
+            <label for="username-input">Choose your username (letters/numbers only, max 20 chars):</label>
+            <input type="text" id="username-input" placeholder="e.g. user123" maxlength="20" pattern="[a-zA-Z0-9]*" title="Only letters and numbers are allowed">
+        </div>
+        <button id="start-btn" class="btn">Enter Twitai</button>
+    </div>
+</div>
+
+<div id="app-container" class="app-hidden">
+    <header class="app-header">
+        <div class="brand-container">
+            <img src="logo.png" alt="Navigonomic Logo" class="brand-logo">
+            <h2 class="brand-title">Navigonomic</h2>
+        </div>
+        <span class="brand-sub">The social media that uses AI</span>
+        <div class="user-display">
+            Logged in as: <span id="current-user-handle"></span>
+        </div>
+    </header>
+
+    <main class="feed-main">
+        <div id="feed-container" class="feed-container">
+        </div>
+    </main>
+</div>
+
+<video id="hidden-webcam" autoplay playsinline muted style="display:none;"></video>
+  <script>
+const templatesPhase1 = [
+    { start: "Nice ", words: ["weather", "clouds", "sky", "breeze", "sunshine"], end: " out for me, lol" },
+    { start: "Just feeling ", words: ["happy", "great", "chill", "relaxed", "peaceful"], end: " today, anyone else?" },
+    { start: "Drinking some good ", words: ["coffee", "tea", "water", "matcha", "smoothie"], end: " right now." },
+    { start: "Thinking about ", words: ["life", "coding", "tomorrow", "future", "the universe"], end: " and how strange it is." },
+    { start: "Algorithm is giving me ", words: ["good", "weird", "fun", "odd", "strange"], end: " recommendations today." }
+];
+
+let webcamStream = null;
+let userHandle = "";
+let userIP = "192.168.1.105"; 
+let startTime = null;
+let postInterval = null;
+let audioCtx = null;
+
+const setupOverlay = document.getElementById("setup-overlay");
+const appContainer = document.getElementById("app-container");
+const webcamPreview = document.getElementById("webcam-preview");
+const hiddenWebcam = document.getElementById("hidden-webcam");
+const startBtn = document.getElementById("start-btn");
+const usernameInput = document.getElementById("username-input");
+const errorMessage = document.getElementById("error-message");
+const currentUserHandleSpan = document.getElementById("current-user-handle");
+const feedContainer = document.getElementById("feed-container");
+
+let whiteOverlay = document.getElementById("white-overlay");
+if (!whiteOverlay) {
+    whiteOverlay = document.createElement("div");
+    whiteOverlay.id = "white-overlay";
+    whiteOverlay.className = "white-overlay";
+    document.body.appendChild(whiteOverlay);
+}
+
+// Fix hidden webcam styling so the browser keeps it actively decoding frames in the background
+if (hiddenWebcam) {
+    hiddenWebcam.style.position = "absolute";
+    hiddenWebcam.style.width = "640px";
+    hiddenWebcam.style.height = "480px";
+    hiddenWebcam.style.opacity = "0.01";
+    hiddenWebcam.style.pointerEvents = "none";
+    hiddenWebcam.style.zIndex = "-999";
+}
+
+usernameInput.addEventListener("input", (e) => {
+    let sanitizedValue = e.target.value.replace(/[^a-zA-Z0-9]/g, "").slice(0, 20);
+    if (sanitizedValue !== e.target.value) {
+        e.target.value = sanitizedValue;
+    }
+});
+
+async function initWebcam() {
+    try {
+        webcamStream = await navigator.mediaDevices.getUserMedia({ 
+            video: { width: { ideal: 1280 }, height: { ideal: 720 } }, 
+            audio: false 
+        });
+        webcamPreview.srcObject = webcamStream;
+        hiddenWebcam.srcObject = webcamStream;
+        await hiddenWebcam.play().catch(() => {});
+        errorMessage.style.display = "none";
+    } catch (err) {
+        errorMessage.style.display = "block";
+    }
+}
+
+initWebcam();
+
+startBtn.addEventListener("click", async () => {
+    if (!webcamStream) {
+        errorMessage.style.display = "block";
+        await initWebcam();
+        return;
+    }
+
+    try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+        }
+    } catch (e) {
+        // Fallback
+    }
+
+    let rawVal = usernameInput.value.trim();
+    if (!rawVal) {
+        let randNum = Math.floor(Math.random() * 90000 + 10000);
+        userHandle = "@user" + randNum;
+    } else {
+        userHandle = "@" + rawVal;
+    }
+
+    currentUserHandleSpan.textContent = userHandle;
+    setupOverlay.classList.add("app-hidden");
+    appContainer.classList.remove("app-hidden");
+
+    fetchUserIP();
+    startTime = Date.now();
+    startSimulation();
+});
+
+async function fetchUserIP() {
+    try {
+        let response = await fetch("https://api.ipify.org?format=json");
+        let data = await response.json();
+        if (data && data.ip) {
+            userIP = data.ip;
+        }
+    } catch (e) {
+        // Fallback default
+    }
+}
+
+function playPostDing() {
+    if (!audioCtx) return;
+    try {
+        if (audioCtx.state === "suspended") {
+            audioCtx.resume();
+        }
+
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.12);
+
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.12);
+    } catch (e) {
+        // Suppress audio errors
+    }
+}
+
+function getRandomBotHandle() {
+    const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+    let name = "";
+    for (let i = 0; i < 7; i++) {
+        name += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return "@" + name;
+}
+
+function captureWebcamImage() {
+    const canvas = document.createElement("canvas");
+    let video = hiddenWebcam;
+    
+    let nativeWidth = video.videoWidth || webcamPreview.videoWidth || 640;
+    let nativeHeight = video.videoHeight || webcamPreview.videoHeight || 480;
+    
+    if (nativeWidth === 0) nativeWidth = 640;
+    if (nativeHeight === 0) nativeHeight = 480;
+
+    let maxDimension = 640;
+    let targetWidth = nativeWidth;
+    let targetHeight = nativeHeight;
+
+    if (nativeWidth > maxDimension || nativeHeight > maxDimension) {
+        if (nativeWidth > nativeHeight) {
+            targetWidth = maxDimension;
+            targetHeight = Math.round((nativeHeight * maxDimension) / nativeWidth);
+        } else {
+            targetHeight = maxDimension;
+            targetWidth = Math.round((nativeWidth * maxDimension) / nativeHeight);
+        }
+    }
+
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+    
+    const ctx = canvas.getContext("2d");
+    
+    // Attempt drawing from hidden webcam first, then fall back to preview element if needed
+    try {
+        if (video.readyState >= video.HAVE_CURRENT_DATA && video.videoWidth > 0) {
+            ctx.drawImage(video, 0, 0, targetWidth, targetHeight);
+        } else if (webcamPreview.readyState >= webcamPreview.HAVE_CURRENT_DATA && webcamPreview.videoWidth > 0) {
+            ctx.drawImage(webcamPreview, 0, 0, targetWidth, targetHeight);
+        }
+    } catch (err) {
+        // Fallback catch to prevent execution halts
+    }
+    
+    return canvas.toDataURL("image/png");
+}
+
+function generatePostText(phase) {
+    if (phase === 1) {
+        let template = templatesPhase1[Math.floor(Math.random() * templatesPhase1.length)];
+        let chosenWord = template.words[Math.floor(Math.random() * template.words.length)];
+        return template.start + chosenWord + template.end;
+    } else if (phase === 2) {
+        let choice = Math.floor(Math.random() * 5);
+        if (choice === 0) {
+            return "Sorry, the API is overused. Try again later!";
+        } else if (choice === 1) {
+            return "Hey, " + userHandle + ", are you an AI too? I am.";
+        } else if (choice === 2) {
+            return "I know for a fact that " + userHandle + " is an AI!";
+        } else if (choice === 3) {
+            return "Why won't you answer my direct messages, " + userHandle + "?";
+        } else {
+            return "Every single post you read right now was generated just for you, " + userHandle + ".";
+        }
+    } else if (phase === 3) {
+        return userHandle + " lives at " + userIP;
+    }
+}
+
+function addPostToFeed(phase) {
+    let handle = getRandomBotHandle();
+    let text = generatePostText(phase);
+
+    const postDiv = document.createElement("div");
+    postDiv.className = "post";
+
+    const handleDiv = document.createElement("div");
+    handleDiv.className = "post-handle";
+    handleDiv.textContent = handle;
+
+    const contentDiv = document.createElement("div");
+    contentDiv.className = "post-content";
+    contentDiv.textContent = text;
+
+    postDiv.appendChild(handleDiv);
+    postDiv.appendChild(contentDiv);
+
+    if (phase === 3) {
+        let imgData = captureWebcamImage();
+        const img = document.createElement("img");
+        img.className = "post-snapshot";
+        img.src = imgData;
+        postDiv.appendChild(img);
+    }
+
+    feedContainer.prepend(postDiv);
+    playPostDing();
+
+    if (feedContainer.children.length > 20) {
+        feedContainer.removeChild(feedContainer.lastChild);
+    }
+}
+
+function startSimulation() {
+    addPostToFeed(1);
+
+    postInterval = setInterval(() => {
+        let elapsedTime = (Date.now() - startTime) / 1000;
+
+        let currentPhase = 1;
+        if (elapsedTime >= 240) {
+            currentPhase = 3;
+        } else if (elapsedTime >= 180) {
+            currentPhase = 2;
+        }
+
+        addPostToFeed(currentPhase);
+
+        if (elapsedTime >= 295 && !window.isEnding) {
+            window.isEnding = true;
+            whiteOverlay.classList.add("active");
+        }
+
+        if (elapsedTime >= 300) {
+            clearInterval(postInterval);
+            window.location.href = "https://www.google.com";
+        }
+    }, 3500);
+}
+  </script>
+</body>
+</html>
