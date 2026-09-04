@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Navigonomic</title>
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navigonomic | Home</title>
+<style>
 * {
     box-sizing: border-box;
     margin: 0;
@@ -18,52 +18,6 @@ body {
     display: flex;
     justify-content: center;
     min-height: 100vh;
-    overflow-x: hidden;
-}
-
-small {
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-    overflow-x: hidden;
-}
-
-.brand-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 5px;
-}
-
-.brand-logo {
-    width: 40px;
-    height: 40px;
-    -webkit-user-select: none;
-    user-select: none;
-    pointer-events: none;
-}
-
-.btn {
-    background-color: #1da1f2;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 9999px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.2s;
-}
-
-.btn:hover {
-    background-color: #1a91da;
-}
-
-.app-hidden {
-    display: none !important;
 }
 
 #app-container {
@@ -76,6 +30,7 @@ small {
     flex-direction: column;
 }
 
+/* ---------- header (kept identical to the app) ---------- */
 .app-header {
     padding: 15px 20px;
     border-bottom: 1px solid #38444d;
@@ -89,6 +44,20 @@ small {
     align-items: center;
 }
 
+.brand-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-logo {
+    width: 32px;
+    height: 32px;
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: none;
+}
+
 .brand-title {
     font-size: 1.2rem;
     color: #1da1f2;
@@ -99,17 +68,233 @@ small {
     font-size: 0.75rem;
     color: #8899a6;
 }
-  </style>
+
+.hero {
+    padding: 48px 24px 36px;
+    border-bottom: 1px solid #38444d;
+}
+
+.hero h1 {
+    font-size: 2rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin-bottom: 14px;
+}
+
+.hero p {
+    color: #8899a6;
+    font-size: 1rem;
+    line-height: 1.5;
+    max-width: 46ch;
+    margin-bottom: 28px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    border: none;
+    padding: 12px 22px;
+    border-radius: 9999px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-primary {
+    background-color: #1da1f2;
+    color: #ffffff;
+}
+.btn-primary:hover { background-color: #1a91da; }
+
+.btn-secondary {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid #38444d;
+}
+.btn-secondary:hover { background-color: #192734; }
+
+.stat-strip {
+    display: flex;
+    border-bottom: 1px solid #38444d;
+}
+.stat {
+    flex: 1;
+    padding: 18px 20px;
+    border-right: 1px solid #38444d;
+}
+.stat:last-child { border-right: none; }
+.stat-num {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+.stat-label {
+    font-size: 0.75rem;
+    color: #8899a6;
+    margin-top: 2px;
+}
+
+.section {
+    padding: 28px 24px;
+    border-bottom: 1px solid #38444d;
+}
+.section h2 {
+    font-size: 1.05rem;
+    margin-bottom: 16px;
+}
+.feature-row {
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+}
+.feature-row + .feature-row {
+    border-top: 1px solid #22303c;
+}
+.feature-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #1da1f2;
+    margin-top: 7px;
+    flex-shrink: 0;
+}
+.feature-text h3 {
+    font-size: 0.95rem;
+    margin-bottom: 3px;
+}
+.feature-text p {
+    font-size: 0.85rem;
+    color: #8899a6;
+    line-height: 1.4;
+}
+
+.quote-post {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 0;
+}
+.quote-post + .quote-post {
+    border-top: 1px solid #22303c;
+}
+.quote-handle {
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+.quote-text {
+    font-size: 0.9rem;
+    color: #e1e8ed;
+    line-height: 1.4;
+}
+
+.cta-block {
+    padding: 32px 24px;
+    text-align: center;
+    border-bottom: 1px solid #38444d;
+}
+.cta-block p {
+    color: #8899a6;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+}
+.cta-block .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 1rem;
+}
+</style>
 </head>
 <body>
-  <header class="app-header">
+<div id="app-container">
+
+    <header class="app-header">
         <div class="brand-container">
             <img src="logo.png" alt="Navigonomic Logo" class="brand-logo">
-            <h2 class="brand-title">Navigonomic</h2>
+            <div>
+                <h2 class="brand-title">Navigonomic</h2>
+                <div class="brand-sub">The social media that uses AI</div>
+            </div>
         </div>
-        <span class="brand-sub">The social media that uses AI</span>
-  </header>
-  <p>Navigonomic is a social media that uses AI, and you watch what happens!</p><br>
-  <small style="color: rgba(255, 255, 255, 0.5);">Note: this isn't actually a social media, it's a horror game.</small>
+    </header>
+
+    <section class="hero">
+        <h1>See what the algorithm has planned for you today.</h1>
+        <p>Navigonomic learns from your camera, your habits, and your feed in real time — so every post feels like it was written specifically for you. Because it was.</p>
+        <div class="hero-actions">
+            <a href="home.html" class="btn btn-primary">Get started</a>
+            <a href="#how-it-works" class="btn btn-secondary">How it works</a>
+        </div>
+    </section>
+
+    <div class="stat-strip">
+        <div class="stat">
+            <div class="stat-num">2.4M</div>
+            <div class="stat-label">active feeds</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">personalized</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">24/7</div>
+            <div class="stat-label">watching</div>
+        </div>
+    </div>
+
+    <section class="section" id="how-it-works">
+        <h2>Why people can't put it down</h2>
+        <div class="feature-row">
+            <div class="feature-dot"></div>
+            <div class="feature-text">
+                <h3>Instant verification</h3>
+                <p>One quick camera check confirms you're really you, and keeps your feed accurate to who you are right now. Don't turn it off, that will likely break the experience!</p>
+            </div>
+        </div>
+        <div class="feature-row">
+            <div class="feature-dot"></div>
+            <div class="feature-text">
+                <h3>A feed that adjusts as you do</h3>
+                <p>Posts shift in tone and content based on what's happening around you, not just what you've typed before.</p>
+            </div>
+        </div>
+        <div class="feature-row">
+            <div class="feature-dot"></div>
+            <div class="feature-text">
+                <h3>Always-on personalization</h3>
+                <p>Navigonomic keeps building what the AI should say in the background, even while you're reading.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>What people are saying</h2>
+        <div class="quote-post">
+            <div class="quote-handle">@wrenlt</div>
+            <div class="quote-text">it's like the app already knows what I'm doing before I do it and that's kind of unsettling honestly but I can't stop looking at the posts</div>
+        </div>
+        <div class="quote-post">
+            <div class="quote-handle">@corvid9</div>
+            <div class="quote-text">Not sure how the recommendations are this accurate, feels closer than any other website i've used, just wish i could type</div>
+        </div>
+        <div class="quote-post">
+            <div class="quote-handle">@paperlungs</div>
+            <div class="quote-text">Gone onto it as a joke, now I check it more than anything else. just a note that it doesn't save if you reset, but that's okay</div>
+        </div>
+    </section>
+
+    <div class="cta-block">
+        <p>Your feed is already waiting.</p>
+        <a href="home.html" class="btn btn-primary">Enter Navigonomic</a>
+    </div>
+
+</div>
 </body>
 </html>
